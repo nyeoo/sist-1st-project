@@ -14,31 +14,10 @@ public class KioskMg
 
     private static BufferedReader br;		         //-- 사용자가 입력시 활용
     private static Integer sel;				         //-- 선택 값
-    private static String con;				         //-- 계속 진행 여부
-    private static int check;
 
-    private static boolean Exit = false;  // 종료 여부를 나타내는 변수
-    // 사용자가 장바구니를 종료하도록 선택한 경우 호출
-    public static void exitCart()
-    {
-        try {
-            // 객체 직렬화
-            FileMg f = new FileMg();
-            f.memberFileOut();
-            f.receiptFileOut();
-            f.list1FileOut();
-            f.list2FileOut();
-        } catch (IOException e) {
-            System.out.println("e.toString: " + e.toString());
-            System.out.println("e.getMessage: " + e.getMessage());
-            System.out.println("printStackTrace................");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        Exit = true;
-        System.exit(0);
-    }
+
+
+
 
     MemberMg mm = new MemberMg();
     public static boolean memflag;
@@ -53,7 +32,6 @@ public class KioskMg
 
         // 사용자 입력값 초기화
         sel = 1;
-        con = "Y";
 
     }
 
@@ -61,7 +39,6 @@ public class KioskMg
     public static void adMenuDisp()
     {
         System.out.println("\n\t[ 키오스크 관리 메뉴 선택 ]=============");
-//        System.out.println("\t1. 판매 관리");
         System.out.println("\t1. 재고 관리");
         System.out.println("\t2. 재료 관리");
         System.out.println("\t3. 사장추천 관리");
@@ -89,36 +66,7 @@ public class KioskMg
         MasterRc masterRc = new MasterRc();
 
 
-        // 클래스를 활용하여 처리
         if (sel==E_STOCKMG){        // 1. 재고 관리
-//            @old 판매관리 : 대메뉴에서 각 상품 판매상태 수정할 수 있도록 수정됨
-            /*FoodAdmin foodadmin = new FoodAdmin();
-            foodadminflag = true;
-            System.out.println("\n\t[ 판매관리 ]===============");
-            System.out.printf("\t1. 판매정보 출력\n\t2. 판매항목 세팅\n\t3. 판매항목 제거\n");
-            System.out.println("\t=========================");
-            while(foodadminflag) {
-                try {
-                    System.out.print("\t▶ 메뉴선택(1~3) : ");
-                    check = Integer.parseInt(br.readLine());
-                }
-                catch (NumberFormatException e){
-                }
-                switch (check){
-                    case 1:
-                        foodadmin.setting_print();
-                        return;
-                    case 2:
-                        foodadmin.product_setting();
-                        return;
-                    case 3:
-                        foodadmin.soldout_management();
-                        return;
-                    default:
-                        System.out.println("\t[!] 입력된 숫자가 옳지 않습니다.");
-                        break;
-                }
-            }*/
             stockflag = true;
             while(stockflag)
             {
@@ -126,7 +74,6 @@ public class KioskMg
                 stm.menuSelect();
                 stm.menuRun();
             }
-
 
         }
         else if (sel==E_INGMG){     // 2. 재료 관리
@@ -138,7 +85,6 @@ public class KioskMg
                 im.menuRun();
             }
 
-
         }
         else if (sel==E_RECMG){     // 3. 사장추천 관리
             masterrcflag = true;
@@ -148,7 +94,6 @@ public class KioskMg
                 masterRc.menuSelect();
                 masterRc.menuRun();
             }
-
 
         }
         else if (sel==E_SALESMG){   // 4. 매출 관리
@@ -171,22 +116,10 @@ public class KioskMg
         }
         else if (sel==E_KIOSKSTART) // 6. 판매시작(사용자 화면으로 이동)
         {
-            // 231012 직렬화
-//            try {
-//                f.memberFileOut();
-//                f.receiptFileOut();
-//
-//            } catch (IOException e) {
-//                System.out.println("e.toString: " + e.toString());
-//                System.out.println("e.getMessage: " + e.getMessage());
-//                System.out.println("printStackTrace................");
-//                e.printStackTrace();
-//            }
             System.out.println("\n\n\t====[[[[[ 사용자 화면 ]]]]]====");
             ProductService productService = new ProductService(); // ProductService 객체 생성
             Kiosk ks = new Kiosk(productService);
             ks.kioskStart();
-//            ad_login.kioskFlag = false;
         }
         else if (sel == E_END)      // 7. 프로그램 종료
         {
@@ -195,4 +128,26 @@ public class KioskMg
         else
             System.out.print("\t[!] 메뉴 선택 오류");
     }
+    public static void exitCart()
+    {
+        try
+        {
+            // 객체 직렬화
+            FileMg f = new FileMg();
+            f.memberFileOut();
+            f.receiptFileOut();
+            f.list1FileOut();
+            f.list2FileOut();
+        } catch (IOException e)
+        {
+            System.out.println("e.toString: " + e.toString());
+            System.out.println("e.getMessage: " + e.getMessage());
+            System.out.println("printStackTrace................");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        System.exit(0);
+    }
+
 }
