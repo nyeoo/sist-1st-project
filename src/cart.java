@@ -19,32 +19,15 @@ class cart
 
     static
     {
-        //al = new ArrayList<Object>();                               //ArrayList 자료구조 생성
         br = new BufferedReader(new InputStreamReader(System.in));  //BufferedReader 객체 생성
         sel = 1;                                                    //사용자 입력값 초기화
     }
     private static int tot;
-    public static int getTot()
-    {
-        if (tot<0)
-        {
-            return -1;
-        }
-        return tot;
-    }
-
-//    private static HashMap<String,Member> hm = new HashMap<String,Member>();
 
     Member m = new Member();
 
     static int py=0;
     static int wan=0;
-
-
-
-    //수경---
-    static OrderSetting oSetting = new OrderSetting();
-
 
     //장바구니 출력 메소드
     public static void menuDis()
@@ -68,8 +51,6 @@ class cart
         }
 
         //선택 재료들, 칼로리 총합, 금액 총합 보여주기
-        //oSetting.set_Print(outerList);
-
         System.out.println("\n\t[장바구니]===============");
         System.out.println("\t1. 장바구니 비우기");
         System.out.println("\t2. 결제");
@@ -81,7 +62,6 @@ class cart
     //메뉴 선택 메소드
     public static void menuSel(int userSelect) throws IOException
     {
-        List<Order> OrderList = CacheData.userSelectOrderList;
         try
         {
             sel = Integer.parseInt(br.readLine());
@@ -120,11 +100,11 @@ class cart
 
         if (con.equals("Y"))                                        //장바구니를 비우기로 했으면 자료구조 비우기
         {
-            OrderList.clear();  // 장바구니를 비우기 (모든 주문 정보 제거)
+            OrderList.clear();                                      // 장바구니를 비우기 (모든 주문 정보 제거)
             OrderValuesList.clear();
-//            OrderList.get(OrderList.size()-1).innerList.clear();  //TODO 왜 지워지지 않는지 조사
-
-
+            for(Product product : CacheData.allProductList) {       // 사용자 남은수량 셋팅
+                product.setP_limitFlag(false);
+            }
 
             System.out.println();
             System.out.println("\t「 장바구니를 비웠습니다. 」");
@@ -235,13 +215,13 @@ class cart
 
                 while (checkFlag)
                 {
-                    boolean idCheck = false;                                         // 선언 및 초기화
+                    boolean idCheck = false;                               // 선언 및 초기화
                     System.out.print("\t▶ ID 입력(전화번호) : ");
-                    id = br.readLine();                                   // 사용자가 ID를 입력
-                    char[] arr1 = id.toCharArray();                              // 사용자가 입력한 id를 char 배열 arr1에 쪼개서 담기
-                    for (int i=3; i<id.length(); i++)                            // 010 뒷부분은 인덱스 3~10
+                    id = br.readLine();                                    // 사용자가 ID를 입력
+                    char[] arr1 = id.toCharArray();                        // 사용자가 입력한 id를 char 배열 arr1에 쪼개서 담기
+                    for (int i=3; i<id.length(); i++)                      // 010 뒷부분은 인덱스 3~10
                     {
-                        if ('0'<=arr1[i] && arr1[i]<='9')                        // 010 뒷부분을 0에서 9까지의 숫자형태로 입력했는지 확인
+                        if ('0'<=arr1[i] && arr1[i]<='9')                  // 010 뒷부분을 0에서 9까지의 숫자형태로 입력했는지 확인
                             idCheck = true;
                     }
 
@@ -255,7 +235,7 @@ class cart
                     {
                         String memPw;
                         while(true) {
-                            boolean pwCheck = false;                                         // 선언 및 초기화
+                            boolean pwCheck = false;                              // 선언 및 초기화
                             System.out.print("\t▶ Password 입력(숫자 4자리) : ");
                             memPw = br.readLine();                                // 사용자가 Password를 입력
                             char[] arr2 = memPw.toCharArray();                    // 사용자가 입력한 Password를 char 배열 arr2에 쪼개서 담기
@@ -305,7 +285,7 @@ class cart
     }
 
 
-    //추가 주문 메소드(수정 필요)
+    //추가 주문 메소드
     public static void cartadd(int userSelect) throws IOException
     {
         List<Order> OrderList = CacheData.userSelectOrderList;
@@ -343,11 +323,7 @@ class cart
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        //System.out.println(OrderList.size());
-        //tot = 0;
         tot = OrderList.get(OrderList.size()-1).getO_totPrice();
-        // 수경--
-        //System.out.println(tot);
 
         System.out.printf("\n\t▶ 보유한 포인트 %d를 사용하시겠습니까(Y/N)? " , MemberMg.hm.get(id).getMemPoint());
         con = br.readLine().toUpperCase();
@@ -383,7 +359,6 @@ class cart
             }
             tot = OrderList.get(OrderList.size()-1).getO_totPrice()-py;
             emptypoint = py;
-//            System.out.println(emptypoint);
 
             System.out.printf("\t▷ 남은 포인트: %d\n", MemberMg.hm.get(id).getMemPoint()-py);
 
@@ -408,7 +383,7 @@ class cart
     }
 
     //결제수단 선택하는 메소드
-    public static void paysel(int py,int memberTotal) throws IOException
+    public static void paysel(int py, int memberTotal) throws IOException
     {
         List<Order> OrderList = CacheData.userSelectOrderList;
         List<OrderValues> OrderValuesList = CacheData.selectValueCart;
@@ -598,21 +573,7 @@ class cart
         {
             receipt(memberTotal);
         }
-        // 231012 직렬화
-//        try {
-//            FileMg f = new FileMg();
-//            //f.orderOuterFileOut();
-//            f.memberFileOut();
-//            f.receiptFileOut();
-//            //f.orderInnerValuesFileOut();
-////            CacheData.orderOuterList = f.orderOuterFileIn();
-//            //CacheData.orderInnerValues = f.orderInnerValuesFileIn();
-//        } catch (IOException e) {
-//            System.out.println("e.toString: " + e.toString());
-//            System.out.println("e.getMessage: " + e.getMessage());
-//            System.out.println("printStackTrace................");
-//            e.printStackTrace();
-//        }
+
         SalesMg salesMg = new SalesMg();
         salesMg.receiptSave();
         payPoint=0;

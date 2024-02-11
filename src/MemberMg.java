@@ -15,7 +15,7 @@ public class MemberMg implements Impl_admin
     public static HashMap<String, Member> hm; //-- 자료구조 선언
     private static BufferedReader br;		         //-- 사용자가 입력시 활용
     private static Integer sel;				         //-- 선택 값
-    private static String con;				         //-- 계속 진행 여부
+
 
     static
     {
@@ -27,7 +27,6 @@ public class MemberMg implements Impl_admin
 
         // 사용자 입력값 초기화
         sel = 1;
-        con = "Y";
     }
 
     // 메뉴 출력 메소드
@@ -133,10 +132,6 @@ public class MemberMg implements Impl_admin
             {
                 System.out.println(e.toString());
             }
-
-
-        //hm.put("123",new Member("1234",1000,"123"));
-        //hm.put("567",new Member("5678", 1000, "567"));
     }
 
 
